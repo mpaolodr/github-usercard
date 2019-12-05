@@ -94,11 +94,19 @@ function createComp(obj) {
   const following = document.createElement("p");
   const bio = document.createElement("p");
 
+  //CALENDAR CONTAINER
+  // const calCont = document.createElement("div");
+
   //SETUP CLASSES
   cardCont.classList.add("card");
   cardInfo.classList.add("card-info");
   name.classList.add("name");
   userName.classList.add("username");
+
+  //CALENDAR CLASS
+  // calCont.classList.add("calendar");
+  //CALENDAR CONTENT
+  // const cal = new GitHubCalendar(obj.login);
 
   //SETUP ATTRIBUTES
   image.setAttribute("src", obj.avatar_url);
@@ -107,7 +115,9 @@ function createComp(obj) {
   //SETUP CONTENT
   name.textContent = obj.name;
   userName.textContent = obj.login;
-  location.textContent = `Location: ${obj.location}`;
+  if (obj.location !== null) {
+    location.textContent = `Location: ${obj.location}`;
+  }
   profile.textContent = "Profile: ";
   link.textContent = obj.html_url;
   followers.textContent = `Followers: ${obj.followers}`;
@@ -128,6 +138,10 @@ function createComp(obj) {
   cardInfo.appendChild(bio);
   profile.appendChild(link);
 
+  //APPEND
+  // cardCont.appendChild(calCont);
+  // new GitHubCalendar(".calendar", `${obj.login}`);
+
   return cardCont;
 }
 
@@ -147,11 +161,18 @@ function reqData() {
         .get(response.data.followers_url)
         .then(newResponse => {
           newResponse.data.forEach(follower => {
-            parentElem.appendChild(createComp(follower));
+            axios
+              .get(`https://api.github.com/users/${follower.login}`)
+              .then(followerResponse => {
+                parentElem.appendChild(createComp(followerResponse.data));
+              })
+              .catch(followerError => {
+                console.log(followerError);
+              });
           });
         })
         .catch(newError => {
-          return console.log(newError);
+          console.log(newError);
         });
     })
 
