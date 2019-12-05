@@ -107,7 +107,9 @@ function createComp(obj) {
   //SETUP CONTENT
   name.textContent = obj.name;
   userName.textContent = obj.login;
-  location.textContent = `Location: ${obj.location}`;
+  if (obj.location !== null) {
+    location.textContent = `Location: ${obj.location}`;
+  }
   profile.textContent = "Profile: ";
   link.textContent = obj.html_url;
   followers.textContent = `Followers: ${obj.followers}`;
