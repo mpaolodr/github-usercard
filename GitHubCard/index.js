@@ -35,30 +35,30 @@ const parentElem = document.querySelector(".cards");
           user, and adding that card to the DOM.
 */
 
-const followersArray = [
-  "tetondan",
-  "dustinmyers",
-  "justsml",
-  "luishrd",
-  "bigknell",
-  "vinnihoke",
-  "Judson00",
-  "MicheSi",
-  "CAM603",
-  "Jrive204",
-  "skyesaj"
-];
+// const followersArray = [
+//   "tetondan",
+//   "dustinmyers",
+//   "justsml",
+//   "luishrd",
+//   "bigknell",
+//   "vinnihoke",
+//   "Judson00",
+//   "MicheSi",
+//   "CAM603",
+//   "Jrive204",
+//   "skyesaj"
+// ];
 
-followersArray.forEach(function(user) {
-  axios
-    .get(`https://api.github.com/users/${user}`)
-    .then(function(response) {
-      parentElem.appendChild(createComp(response.data));
-    })
-    .catch(function(error) {
-      console.log(error);
-    });
-});
+// followersArray.forEach(function(user) {
+//   axios
+//     .get(`https://api.github.com/users/${user}`)
+//     .then(function(response) {
+//       parentElem.appendChild(createComp(response.data));
+//     })
+//     .catch(function(error) {
+//       console.log(error);
+//     });
+// });
 
 /* Step 3: Create a function that accepts a single object as its only argument,
           Using DOM methods and properties, create a component that will return the following DOM element:
@@ -138,3 +138,26 @@ function createComp(obj) {
   luishrd
   bigknell
 */
+
+function reqData() {
+  axios
+    .get(`https://api.github.com/users/mpaolodr`)
+    .then(response => {
+      return axios
+        .get(response.data.followers_url)
+        .then(newResponse => {
+          newResponse.data.forEach(follower => {
+            parentElem.appendChild(createComp(follower));
+          });
+        })
+        .catch(newError => {
+          return console.log(newError);
+        });
+    })
+
+    .catch(error => {
+      console.log(error);
+    });
+}
+
+reqData();
