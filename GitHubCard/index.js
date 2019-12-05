@@ -6,7 +6,7 @@
 axios
   .get("https://api.github.com/users/mpaolodr")
   .then(function(response) {
-    console.log(response);
+    parentElem.appendChild(createComp(response.data));
   })
   .catch(function(error) {
     console.log(error);
@@ -23,6 +23,8 @@ axios
            create a new component and add it to the DOM as a child of .cards
 */
 
+const parentElem = document.querySelector(".cards");
+
 /* Step 5: Now that you have your own card getting added to the DOM, either 
           follow this link in your browser https://api.github.com/users/<Your github name>/followers 
           , manually find some other users' github handles, or use the list found 
@@ -33,7 +35,24 @@ axios
           user, and adding that card to the DOM.
 */
 
-const followersArray = [];
+const followersArray = [
+  "tetondan",
+  "dustinmyers",
+  "justsml",
+  "luishrd",
+  "bigknell"
+];
+
+followersArray.forEach(function(user) {
+  axios
+    .get(`https://api.github.com/users/${user}`)
+    .then(function(response) {
+      parentElem.appendChild(createComp(response.data));
+    })
+    .catch(function(error) {
+      console.log(error);
+    });
+});
 
 /* Step 3: Create a function that accepts a single object as its only argument,
           Using DOM methods and properties, create a component that will return the following DOM element:
@@ -88,6 +107,18 @@ function createComp(obj) {
   followers.textContent = obj.followers;
   following.textContent = obj.following;
   bio.textContent = obj.bio;
+
+  //APPEND
+  cardCont.appendChild(image);
+  cardCont.appendChild(cardInfo);
+  cardInfo.appendChild(name);
+  cardInfo.appendChild(userName);
+  cardInfo.appendChild(location);
+  cardInfo.appendChild(profile);
+  cardInfo.appendChild(followers);
+  cardInfo.appendChild(following);
+  cardInfo.appendChild(bio);
+  profile.appendChild(link);
 
   return cardCont;
 }
