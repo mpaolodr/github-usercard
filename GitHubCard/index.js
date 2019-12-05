@@ -40,7 +40,13 @@ const followersArray = [
   "dustinmyers",
   "justsml",
   "luishrd",
-  "bigknell"
+  "bigknell",
+  "vinnihoke",
+  "Judson00",
+  "MicheSi",
+  "CAM603",
+  "Jrive204",
+  "skyesaj"
 ];
 
 followersArray.forEach(function(user) {
@@ -101,12 +107,14 @@ function createComp(obj) {
   //SETUP CONTENT
   name.textContent = obj.name;
   userName.textContent = obj.login;
-  location.textContent = obj.location;
+  location.textContent = `Location: ${obj.location}`;
   profile.textContent = "Profile: ";
   link.textContent = obj.html_url;
-  followers.textContent = obj.followers;
-  following.textContent = obj.following;
-  bio.textContent = obj.bio;
+  followers.textContent = `Followers: ${obj.followers}`;
+  following.textContent = `Following: ${obj.following}`;
+  if (obj.bio !== null) {
+    bio.textContent = `Bio: ${obj.bio}`;
+  }
 
   //APPEND
   cardCont.appendChild(image);
