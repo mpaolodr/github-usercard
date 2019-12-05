@@ -3,6 +3,15 @@
            https://api.github.com/users/<your name>
 */
 
+axios
+  .get("https://api.github.com/users/mpaolodr")
+  .then(function(response) {
+    console.log(response);
+  })
+  .catch(function(error) {
+    console.log(error);
+  });
+
 /* Step 2: Inspect and study the data coming back, this is YOUR 
    github info! You will need to understand the structure of this 
    data in order to use it to build your component function 
@@ -45,6 +54,43 @@ const followersArray = [];
 </div>
 
 */
+
+function createComp(obj) {
+  //CREATE ELEMENTS
+  const cardCont = document.createElement("div");
+  const image = document.createElement("img");
+  const cardInfo = document.createElement("div");
+  const name = document.createElement("h3");
+  const userName = document.createElement("p");
+  const location = document.createElement("p");
+  const profile = document.createElement("p");
+  const link = document.createElement("a");
+  const followers = document.createElement("p");
+  const following = document.createElement("p");
+  const bio = document.createElement("p");
+
+  //SETUP CLASSES
+  cardCont.classList.add("card");
+  cardInfo.classList.add("card-info");
+  name.classList.add("name");
+  userName.classList.add("username");
+
+  //SETUP ATTRIBUTES
+  image.setAttribute("src", obj.avatar_url);
+  link.setAttribute("href", obj.html_url);
+
+  //SETUP CONTENT
+  name.textContent = obj.name;
+  userName.textContent = obj.login;
+  location.textContent = obj.location;
+  profile.textContent = "Profile: ";
+  link.textContent = obj.html_url;
+  followers.textContent = obj.followers;
+  following.textContent = obj.following;
+  bio.textContent = obj.bio;
+
+  return cardCont;
+}
 
 /* List of LS Instructors Github username's: 
   tetondan
