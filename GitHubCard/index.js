@@ -94,8 +94,12 @@ function createComp(obj) {
   const following = document.createElement("p");
   const bio = document.createElement("p");
 
-  //CALENDAR CONTAINER
-  // const calCont = document.createElement("div");
+  //For button
+  const openBtn = document.createElement("span");
+  const closeBtn = document.createElement("span");
+
+  //For calendar
+  const calCont = document.createElement("div");
 
   //SETUP CLASSES
   cardCont.classList.add("card");
@@ -103,10 +107,12 @@ function createComp(obj) {
   name.classList.add("name");
   userName.classList.add("username");
 
-  //CALENDAR CLASS
-  // calCont.classList.add("calendar");
-  //CALENDAR CONTENT
-  // const cal = new GitHubCalendar(obj.login);
+  //For calendar
+  calCont.classList.add("calContainer");
+
+  //For button
+  openBtn.classList.add("btn");
+  closeBtn.classList.add("btn", "hide");
 
   //SETUP ATTRIBUTES
   image.setAttribute("src", obj.avatar_url);
@@ -125,6 +131,9 @@ function createComp(obj) {
   if (obj.bio !== null) {
     bio.textContent = `Bio: ${obj.bio}`;
   }
+  //For button
+  openBtn.textContent = "\u21A1";
+  closeBtn.textContent = "\u24E7";
 
   //APPEND
   cardCont.appendChild(image);
@@ -138,9 +147,25 @@ function createComp(obj) {
   cardInfo.appendChild(bio);
   profile.appendChild(link);
 
-  //APPEND
-  // cardCont.appendChild(calCont);
-  // new GitHubCalendar(".calendar", `${obj.login}`);
+  // For Button
+  cardCont.appendChild(openBtn);
+  cardCont.appendChild(closeBtn);
+
+  //For calendar
+  cardCont.appendChild(calCont);
+  new GitHubCalendar(calCont, obj.login);
+
+  openBtn.addEventListener("click", function() {
+    cardCont.classList.toggle("card--open");
+    openBtn.classList.toggle("hide");
+    closeBtn.classList.toggle("hide");
+  });
+
+  closeBtn.addEventListener("click", function() {
+    cardCont.classList.toggle("card--open");
+    openBtn.classList.toggle("hide");
+    closeBtn.classList.toggle("hide");
+  });
 
   return cardCont;
 }
@@ -157,7 +182,7 @@ function reqData() {
   axios
     .get(`https://api.github.com/users/mpaolodr`)
     .then(response => {
-      return axios
+      axios
         .get(response.data.followers_url)
         .then(newResponse => {
           newResponse.data.forEach(follower => {
@@ -180,5 +205,4 @@ function reqData() {
       console.log(error);
     });
 }
-
 reqData();
