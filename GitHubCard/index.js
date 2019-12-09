@@ -35,30 +35,30 @@ const parentElem = document.querySelector(".cards");
           user, and adding that card to the DOM.
 */
 
-const followersArray = [
-  "tetondan",
-  "dustinmyers",
-  "justsml",
-  "luishrd",
-  "bigknell",
-  "vinnihoke",
-  "Judson00",
-  "MicheSi",
-  "CAM603",
-  "Jrive204",
-  "skyesaj"
-];
+// const followersArray = [
+//   "tetondan",
+//   "dustinmyers",
+//   "justsml",
+//   "luishrd",
+//   "bigknell",
+//   "vinnihoke",
+//   "Judson00",
+//   "MicheSi",
+//   "CAM603",
+//   "Jrive204",
+//   "skyesaj"
+// ];
 
-followersArray.forEach(function(user) {
-  axios
-    .get(`https://api.github.com/users/${user}`)
-    .then(function(response) {
-      parentElem.appendChild(createComp(response.data));
-    })
-    .catch(function(error) {
-      console.log(error);
-    });
-});
+// followersArray.forEach(function(user) {
+//   axios
+//     .get(`https://api.github.com/users/${user}`)
+//     .then(function(response) {
+//       parentElem.appendChild(createComp(response.data));
+//     })
+//     .catch(function(error) {
+//       console.log(error);
+//     });
+// });
 
 /* Step 3: Create a function that accepts a single object as its only argument,
           Using DOM methods and properties, create a component that will return the following DOM element:
@@ -94,11 +94,25 @@ function createComp(obj) {
   const following = document.createElement("p");
   const bio = document.createElement("p");
 
+  //For button
+  const openBtn = document.createElement("span");
+  const closeBtn = document.createElement("span");
+
+  //For calendar
+  const calCont = document.createElement("div");
+
   //SETUP CLASSES
   cardCont.classList.add("card");
   cardInfo.classList.add("card-info");
   name.classList.add("name");
   userName.classList.add("username");
+
+  //For calendar
+  calCont.classList.add("calContainer");
+
+  //For button
+  openBtn.classList.add("btn");
+  closeBtn.classList.add("btn", "hide");
 
   //SETUP ATTRIBUTES
   image.setAttribute("src", obj.avatar_url);
@@ -117,6 +131,9 @@ function createComp(obj) {
   if (obj.bio !== null) {
     bio.textContent = `Bio: ${obj.bio}`;
   }
+  //For button
+  openBtn.textContent = "\u21A1";
+  closeBtn.textContent = "\u24E7";
 
   //APPEND
   cardCont.appendChild(image);
@@ -130,6 +147,26 @@ function createComp(obj) {
   cardInfo.appendChild(bio);
   profile.appendChild(link);
 
+  // For Button
+  cardCont.appendChild(openBtn);
+  cardCont.appendChild(closeBtn);
+
+  //For calendar
+  cardCont.appendChild(calCont);
+  new GitHubCalendar(calCont, obj.login);
+
+  openBtn.addEventListener("click", function() {
+    cardCont.classList.toggle("card--open");
+    openBtn.classList.toggle("hide");
+    closeBtn.classList.toggle("hide");
+  });
+
+  closeBtn.addEventListener("click", function() {
+    cardCont.classList.toggle("card--open");
+    openBtn.classList.toggle("hide");
+    closeBtn.classList.toggle("hide");
+  });
+
   return cardCont;
 }
 
@@ -140,3 +177,32 @@ function createComp(obj) {
   luishrd
   bigknell
 */
+
+function reqData() {
+  axios
+    .get(`https://api.github.com/users/mpaolodr`)
+    .then(response => {
+      axios
+        .get(response.data.followers_url)
+        .then(newResponse => {
+          newResponse.data.forEach(follower => {
+            axios
+              .get(`https://api.github.com/users/${follower.login}`)
+              .then(followerResponse => {
+                parentElem.appendChild(createComp(followerResponse.data));
+              })
+              .catch(followerError => {
+                console.log(followerError);
+              });
+          });
+        })
+        .catch(newError => {
+          console.log(newError);
+        });
+    })
+
+    .catch(error => {
+      console.log(error);
+    });
+}
+reqData();
